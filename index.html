@@ -219,22 +219,22 @@ const ROSTERS = {
     ["Button/Collared T-Shirt","short sleeve, button placket, collar, straight hem","7-year-old Caucasian boy, brown hair","Living room","tidy living room with a small stack of books","sitting on the stack of books, adjusting the collar"]
   ],
   girls: [
-    ["Sleep Sack","sleeveless armholes, diagonal front zipper, rounded enclosed bottom, side label","12-month-old Caucasian baby girl, wispy blonde hair","Nursery","white crib in a simple nursery","lying in the crib, calm, holding her feet"],
-    ["Long Sleeve Ruffle Dress","long sleeves, ruffle trim, dress silhouette, hem","4-year-old Caucasian girl, loose curls","Flower field","sunlit flower field","twirling, holding the skirt lightly"],
-    ["Convertible Romper","snaps, ruffle trim, convertible footed or open legs","2-year-old Black baby girl, afro puffs","Studio","warm beige seamless","crawling toward the camera, smiling"],
-    ["Footie","ruffle trim, long sleeves, enclosed feet, zip path","12-month-old Caucasian baby girl, wavy hair","Studio","soft ivory seamless","sitting on the floor, looking up, holding a plush bunny"],
-    ["Tank Top","tank straps, ruffle armholes, neckline, hem","5-year-old Caucasian girl, ponytail","Studio","warm beige seamless with a small wooden cube","sitting on the wooden cube, hands behind her back, looking up"],
-    ["T-Shirt + Long Pajama Set","short-sleeve tee and long elastic-waist pants, tagless","6-year-old Latina girl, braids","Reading nook","small chair with a few books","sitting cross-legged, reading a book"],
-    ["Knot Sack","knotted bottom, enclosed sack silhouette, neckline","newborn Caucasian baby girl","Nursery","soft bassinet with neutral bedding","sleeping peacefully in the bassinet"],
-    ["Sleeveless Ruffle Dress","ruffle straps, A-line silhouette, hem","3-year-old Caucasian girl, low bun","Garden","sunlit garden with a few flowers","walking, reaching to smell a flower"],
-    ["Short Sleeve Swirl Dress","swirl skirt, short sleeves, neckline","4-year-old Caucasian girl, wavy hair","Flower field","sunlit flower field","skipping, arms stretched out"],
-    ["Ruffle One Piece Footie","ruffle trim, enclosed feet, long sleeves, snaps or zip","15-month-old South Asian baby girl, straight dark hair","Studio","soft ivory seamless","standing, looking up, one hand reaching"],
-    ["Ruffle Gown Sleep Sack","ruffle hem, gown/sack silhouette, elastic or knotted bottom, neckline","newborn Caucasian baby girl","Nursery","wooden crib with soft bedding","lying in the crib, calm, a plush bunny nearby"],
-    ["Long Sleeve Pajama Set","long-sleeve top and cuffed pant, crew neck, tagless","6-year-old Caucasian girl, straight hair","Bedroom","simple bed with neutral bedding","kneeling on the bed, hugging a pillow"],
-    ["Knot Hat","knot top, ruffle brim (paired with the gown)","newborn Caucasian baby girl","Nursery","wooden crib, soft bedding","yawning in the crib, the knot hat clearly visible"],
-    ["T-Shirt + Shorts Pajama Set","short-sleeve tee and shorts, tagless","5-year-old Middle Eastern girl, straight hair","Bedroom","simple bed with neutral bedding","sitting on the bed, laughing"],
-    ["Flutter Sleeve Romper","flutter sleeves, bubble hem, snaps, ruffle","2-year-old mixed-race toddler girl, loose curls","Studio","warm beige seamless","standing, dancing with arms out"],
-    ["Ruffle Shorts","ruffle shorts, elastic waist","3-year-old Caucasian girl, braids","Garden","simple sunlit garden spot","walking barefoot on the grass, carrying a small woven basket"]
+    ["Sleep Sack","sleeveless armholes, diagonal front zipper, rounded enclosed bottom, side label","12-month-old Caucasian baby girl, wispy blonde hair","Nursery","white crib in a simple nursery","lying in the crib, calm"],
+    ["Long Sleeve Ruffle Dress","long sleeves, ruffle trim, dress silhouette, hem","4-year-old Caucasian girl, loose curls","Flower field","sunlit flower field","twirling"],
+    ["Convertible Romper","snaps, ruffle trim, convertible footed or open legs","2-year-old Black baby girl, afro puffs","Studio","warm beige seamless","sitting, calm"],
+    ["Footie","ruffle trim, long sleeves, enclosed feet, zip path","12-month-old Caucasian baby girl, wavy hair","Studio","soft ivory seamless","sitting, looking up"],
+    ["Long Sleeve Long Leg Pajama Set","long-sleeve top and long elastic-waist leggings, crew neck, tagless","6-year-old Caucasian girl, straight hair","Bedroom","simple bed with neutral bedding","sitting on the bed"],
+    ["Ruffle Footie","ruffle trim, enclosed feet, long sleeves, snaps or zip","15-month-old South Asian baby girl, straight dark hair","Studio","soft ivory seamless","standing, looking up"],
+    ["Sleeveless Ruffle Dress","ruffle straps, A-line silhouette, hem","3-year-old Caucasian girl, low bun","Garden","sunlit garden with a few flowers","walking"],
+    ["Short Sleeve Swirl Dress","swirl skirt, short sleeves, neckline","4-year-old Caucasian girl, wavy hair","Flower field","sunlit flower field","skipping"],
+    ["Knot Sack","knotted bottom, enclosed sack silhouette, neckline","newborn Caucasian baby girl","Nursery","soft bassinet with neutral bedding","sleeping"],
+    ["Ruffle Gown Sleep Sack","ruffle hem, gown/sack silhouette, elastic or knotted bottom, neckline","newborn Hispanic baby girl","Nursery","wooden crib with soft bedding","lying calmly"],
+    ["Knot Hat","knot top, ruffle brim","newborn Caucasian baby girl","Nursery","wooden crib, soft bedding","yawning, calm"],
+    ["T-Shirt + Shorts Pajama Set","short-sleeve tee and shorts, tagless","5-year-old Middle Eastern girl, straight hair","Bedroom","simple bed with neutral bedding","sitting on the bed"],
+    ["T-Shirt + Long Leg Pajama Set","short-sleeve tee and long elastic-waist leggings, tagless","6-year-old Latina girl, braids","Reading nook","small chair with a few books","reading a book"],
+    ["Flutter Sleeveless Romper","ruffle flutter straps (sleeveless), bubble hem, snaps","2-year-old mixed-race toddler girl, loose curls","Studio","warm beige seamless","standing, dancing"],
+    ["Tank Top","tank straps, ruffle armholes, neckline, hem","5-year-old Caucasian girl, ponytail","Studio","warm beige seamless with a small wooden cube","sitting on the cube"],
+    ["Ruffle Shorts","ruffle shorts, elastic waist","3-year-old Black girl, braids","Garden","simple sunlit garden spot","walking barefoot"]
   ]
 };
 
@@ -405,7 +405,7 @@ function garmentType(name){
   return "other";
 }
 const VIS = {
-  hat:"The knot hat is the hero and fully visible; dress the baby in a plain, solid neutral bodysuit so nothing competes with the hat.",
+  hat:"The knot hat is the hero and fully visible; the baby also wears the matching knot sack (the coordinating set).",
   sleep:"Show the entire garment; the baby lies so its full length is visible and uncropped.",
   tank:"Upper-body hero — frame head to mid-thigh so the top fills the frame.",
   shorts:"Lower-body hero — frame chest to feet so the shorts are the focus.",
@@ -456,7 +456,7 @@ const CAMERA_BANKS = {
   other:["50mm lifestyle, full body","35mm floor level, full body","50mm overhead, full body","85mm full body, off-center"]
 };
 
-const PAIRS = { "Sleep Sack":" with the matching knot hat", "Knot Sack":" with the matching knot hat", "Knot Sleep Gown":" with the matching knot hat", "Ruffle Gown Sleep Sack":" with the matching knot hat" };
+const PAIRS = { "Sleep Sack":" with the matching knot hat", "Knot Sack":" with the matching knot hat", "Knot Sleep Gown":" with the matching knot hat", "Ruffle Gown Sleep Sack":" with the matching knot hat", "Knot Hat":" with the matching knot sack" };
 function buildLifestyle(r, cfg, camera){
   const scene = cap(SCENES[r.scene] || SCENES.Studio) + (r.location ? "; " + r.location : "") + ".";
   const pat = cfg.pattern || "Sweet Bamboo";
