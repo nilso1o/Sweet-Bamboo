@@ -90,6 +90,12 @@
   .pat .pbtns .donebtn{margin-top:0;flex:1;}
   .pat .dlbtn{flex:1;text-align:center;font-size:11px;padding:6px 8px;border-radius:7px;border:1px solid var(--line);color:var(--muted);font-weight:600;background:transparent;cursor:pointer;font-family:inherit;}
   .pat .dlbtn:hover{border-color:var(--accent);color:var(--accent);}
+  .lifedrop{margin-top:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .lifedrop>summary{padding:12px 14px;background:var(--surface2);color:var(--text);font-weight:600;cursor:pointer;list-style:none;}
+  .lifedrop>summary::-webkit-details-marker{display:none;}
+  .lifedrop>summary::after{content:"▾";float:right;color:var(--accent);}
+  .lifedrop[open]>summary::after{content:"▴";}
+  .lifewrap{padding:12px 12px 2px;}
 </style>
 </head>
 <body>
@@ -104,6 +110,10 @@
   <div class="panel">
     <h2>Pick a pattern</h2>
     <p class="hint">Click a pattern to autofill the fields below. Mark pattern done when finished.</p>
+    <div class="tabs" id="patGenderTabs">
+      <button class="tab active" data-g="boys">Boys <span class="tc" id="tcB"></span></button>
+      <button class="tab" data-g="girls">Girls <span class="tc" id="tcG"></span></button>
+    </div>
     <div class="tabs" id="patTabs">
       <button class="tab active" data-t="unfinished">Unfinished <span class="tc" id="tcU"></span></button>
       <button class="tab" data-t="finished">Finished <span class="tc" id="tcF"></span></button>
@@ -242,12 +252,17 @@ const ROSTERS = {
 const FLAT_PROMPT =
 `Apply the seamless textile print from image 1 onto the garment in image 2. Keep the garment in image 2 exactly as it is — same shape, cut, folds, seams, proportions and soft shadows.
 
+IMAGE ROLES
+• Image 1 = the print to apply.
+• Image 2 = the garment (preserve its shape and construction).
+• Image 3 = pattern-sizing reference: match the motif size and repeat scale of the print to how it appears in image 3.
+
 MOST IMPORTANT — BACKGROUND
 The garment sits alone on a pure, solid white background (#FFFFFF). Put the print ONLY on the garment's fabric. Everything outside the garment's edges must stay plain, empty white — do NOT tile, extend, echo, blur or fade the print into the background, and add no coloured backdrop, gradient, shadow or props. Treat this as an isolated e-commerce cut-out on clean white.
 
 PRINT
-• Micro-repeat scale: shrink the print so the motifs are small, refined and tightly, evenly repeated across the whole garment — a real retail baby-clothing print, never large or graphic.
-• Keep the same scale across sleeves, body and legs; align across seams and panels; do not stretch, crop, rotate or enlarge the motifs.
+• Match the print scale to image 3: the motifs should be the same size and density as the image 3 sizing reference — small, refined and evenly repeated, never larger than shown in image 3.
+• Keep that same scale across sleeves, body and legs; align across seams and panels; do not stretch, crop, rotate or resize the motifs away from the image 3 reference.
 
 FABRIC & DETAILS
 • Premium bamboo-cotton knit: soft matte fabric, natural drape, gentle fabric shadows, clean edges, high resolution.
@@ -323,7 +338,7 @@ const PATTERNS = [
   {file:"DAISY 05.jpg", name:"Daisy", color:"soft pink", motif:"daisies", gender:"girls"},
   {file:"DINOSOUR PATTERN-01.jpg", name:"Dinosaur", color:"sage gray", motif:"dinosaurs", gender:"boys"},
   {file:"Dolphin Graphics.jpg", name:"Dolphin", color:"cream", motif:"dolphins and waves", gender:"boys"},
-  {file:"Final NYC Pattern (77).png", name:"NYC", color:"pale blue", motif:"New York City icons — taxis, skyline, landmarks", gender:"boys"},
+  {file:"Final NYC Pattern (77).png", name:"NYC", color:"pale blue", motif:"New York City icons — taxis, skyline, landmarks", gender:"girls"},
   {file:"beehive.jpg", name:"Beehive", color:"cream", motif:"bees, honeycomb, hives", gender:"girls"},
   {file:"butterflyfloral (Page 1).jpg", name:"Butterfly Floral 1", color:"pink", motif:"butterflies and flowers", gender:"girls"},
   {file:"butterflyfloral (Page 2).jpg", name:"Butterfly Floral 2", color:"cream", motif:"butterflies and flowers", gender:"girls"},
@@ -338,7 +353,7 @@ const PATTERNS = [
   {file:"rainbowclouds.jpg", name:"Rainbow Clouds", color:"blush pink", motif:"rainbows and clouds", gender:"girls"},
   {file:"roadnumbers (1).jpg", name:"Road & Numbers", color:"soft gray", motif:"roads, cars, numbers", gender:"boys"},
   {file:"safari.jpg", name:"Safari", color:"peach", motif:"safari animals — lions, giraffes, elephants", gender:"boys"},
-  {file:"seashore.jpg", name:"Seashore", color:"aqua", motif:"seashells, starfish, waves", gender:"girls"},
+  {file:"seashore.jpg", name:"Seashore", color:"aqua", motif:"seashells, starfish, waves", gender:"boys"},
   {file:"smores.jpg", name:"S'mores", color:"slate gray", motif:"s'mores, marshmallows, campfire", gender:"boys"},
   {file:"splatter.jpg", name:"Splatter", color:"cream", motif:"colourful paint splatter", gender:"boys"},
   {file:"surfvan (Page 2).jpg", name:"Surf Van", color:"ocean blue", motif:"surf vans, surfboards, waves", gender:"boys"},
@@ -346,16 +361,21 @@ const PATTERNS = [
 ];
 let doneSet = new Set();
 let patTab = "unfinished";
+let patGender = "boys";
 function loadDone(){ try{ const s=localStorage.getItem("sb_done"); if(s) doneSet=new Set(JSON.parse(s)); }catch(e){} }
 function saveDone(){ try{ localStorage.setItem("sb_done", JSON.stringify([...doneSet])); }catch(e){} }
 function toggleDone(name){ if(doneSet.has(name)) doneSet.delete(name); else doneSet.add(name); saveDone(); renderPatterns(); }
 function renderPatterns(){
   const host=document.getElementById("patternList"); if(!host) return;
-  const doneN = PATTERNS.filter(p=>doneSet.has(p.name)).length;
-  document.getElementById("tcU").textContent = PATTERNS.length - doneN;
+  const inGender = PATTERNS.filter(p=>p.gender===patGender);
+  const doneN = inGender.filter(p=>doneSet.has(p.name)).length;
+  document.getElementById("tcB").textContent = PATTERNS.filter(p=>p.gender==="boys").length;
+  document.getElementById("tcG").textContent = PATTERNS.filter(p=>p.gender==="girls").length;
+  document.getElementById("tcU").textContent = inGender.length - doneN;
   document.getElementById("tcF").textContent = doneN;
   host.innerHTML="";
   PATTERNS.forEach((p,i)=>{
+    if(p.gender!==patGender) return;
     const done=doneSet.has(p.name);
     if((patTab==="finished") !== done) return;
     const d=document.createElement("div");
@@ -536,28 +556,12 @@ function generate(){
   const cfg = { pattern: val("pattern"), color: val("color"), motif: val("motif") };
   if(!cfg.pattern){ alert("Enter a pattern name first."); return; }
   const out = document.getElementById("output");
-  let html = card("1 · Flatlay prompt", "Model A — applies the pattern to the garments", FLAT_PROMPT, "flat");
-
-  const cleanup = CLEANUP_PASS.replace("{color}", cfg.color ? " ("+cfg.color+")" : "");
-  const cleanN = ROSTERS[gender].length;
-  window._cleanupN = Array(cleanN).fill(cleanup).join("|");
-  html += `<div class="prompt-card"><div class="prompt-head flat">`+
-    `<div><strong>2 · Flatlay cleanup pass</strong><span class="tag">Copy ×${cleanN} → Array node → Text Iterator into a cleanup Nano Banana; wire Model A's output to its image input exactly like the lifestyle model so the 16 pair up</span></div>`+
-    `<button class="btn small secondary" onclick="copyText(window._cleanupN,this)">Copy ×${cleanN}</button>`+
-    `</div><pre>${esc(cleanup)}</pre></div>`;
-
-  ROSTERS[gender].forEach(a=>{
-    const f = FLATLAY_FIXES[a[0]];
-    if(f){
-      const p = f.prompt.replace("{color}", cfg.color ? " ("+cfg.color+")" : "");
-      html += card("3 · "+f.title, f.tag, p, "flat");
-    }
-  });
-  html += card("4 · Footie sole", "separate gen — run with the real footie-sole photo as the image reference so the dots + SB stay accurate", FOOTIE_SOLE.replace("{color}", cfg.color ? " ("+cfg.color+")" : ""), "flat");
+  let html = card("Flatlay prompt", "Model A — applies the pattern to the garments", FLAT_PROMPT, "flat");
 
   const seed = (parseInt(localStorage.getItem("sb_runseed")||"0",10))||0;
   const usedPoses = new Set();
   window._csv = [];
+  let life = "";
   ROSTERS[gender].forEach((a,i)=>{
     const type = garmentType(a[0]);
     const bank = (POSE_BANKS[type] && POSE_BANKS[type].length) ? POSE_BANKS[type] : POSE_DEFAULTS[type];
@@ -568,8 +572,9 @@ function generate(){
     const r = {garment:a[0], details:a[1], character:a[2], scene:a[3], location:a[4], action:pose};
     const p = buildLifestyle(r, cfg, cam);
     window._csv.push([cfg.pattern+" — "+r.garment, p]);
-    html += card(r.garment, r.scene + " · " + r.character, p, "");
+    life += card(r.garment, r.scene + " · " + r.character, p, "");
   });
+  html += `<details class="lifedrop"><summary>Lifestyle prompts (${ROSTERS[gender].length})</summary><div class="lifewrap">${life}</div></details>`;
   try{ localStorage.setItem("sb_runseed", String(seed+1)); }catch(e){}
   out.innerHTML = html;
   window.scrollTo({top:document.getElementById("output").offsetTop, behavior:"smooth"});
@@ -617,6 +622,14 @@ document.querySelectorAll("#patTabs .tab").forEach(b=>{
     document.querySelectorAll("#patTabs .tab").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     patTab=b.dataset.t;
+    renderPatterns();
+  };
+});
+document.querySelectorAll("#patGenderTabs .tab").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#patGenderTabs .tab").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    patGender=b.dataset.g;
     renderPatterns();
   };
 });
