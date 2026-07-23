@@ -240,40 +240,35 @@ const ROSTERS = {
 
 /* ---------- Constant flatlay prompt ---------- */
 const FLAT_PROMPT =
-`Apply the seamless textile pattern from image 1 onto the garment shown in image 2.
+`Apply the seamless textile print from image 1 onto the garment in image 2. Keep the garment in image 2 exactly as it is — same shape, cut, folds, seams, proportions and soft shadows.
 
-Important instructions:
-• Scale the pattern down to a micro-repeat size (approximately 40–60% smaller than original tile scale).
-• The print must appear refined and tightly repeated, not oversized.
-• Keep pattern elements small and evenly distributed across the garment.
-• Maintain consistent scale across sleeves, body, and legs.
-• Ensure pattern alignment across seams and panels.
-• Do not stretch or distort the artwork.
-• Preserve fabric texture and garment shadows.
-• Preserve original garment shape and structure.
-• Background must remain clean white.
-• Apply pattern ONLY to the garment — not the white #FFFFFF background.
-• Invisible zippers covered are covered
-• Bias Binding is the same fabric as the pattern
-• Any zipper matches the main colour of the print
-Textile realism:
-• Premium bamboo cotton appearance
-• Natural fabric drape preserved
-• Soft, high-resolution textile finish
-• Clean edges
-Critical:
-Pattern should look like a fine retail micro-print, not a large graphic print.
-No enlarged motifs.
-No cropped oversized elements.`;
+MOST IMPORTANT — BACKGROUND
+The garment sits alone on a pure, solid white background (#FFFFFF). Put the print ONLY on the garment's fabric. Everything outside the garment's edges must stay plain, empty white — do NOT tile, extend, echo, blur or fade the print into the background, and add no coloured backdrop, gradient, shadow or props. Treat this as an isolated e-commerce cut-out on clean white.
+
+PRINT
+• Micro-repeat scale: shrink the print so the motifs are small, refined and tightly, evenly repeated across the whole garment — a real retail baby-clothing print, never large or graphic.
+• Keep the same scale across sleeves, body and legs; align across seams and panels; do not stretch, crop, rotate or enlarge the motifs.
+
+FABRIC & DETAILS
+• Premium bamboo-cotton knit: soft matte fabric, natural drape, gentle fabric shadows, clean edges, high resolution.
+• Bias binding and trims are the same fabric and print as the rest of the garment.
+
+Do not redesign, recolour or restructure the garment. Output a single garment, centred, on pure solid white (#FFFFFF) — print on the garment only.`;
 
 /* Per-garment flatlay corrections (run via ChatGPT Images 2.0 Edit). {color} = the pattern's main colour. */
 const FLATLAY_FIXES = {
-  "Knot Hat": {title:"Pattern scale fix", tag:"run with ChatGPT Images 2.0 Edit if the print comes out too small", prompt:"Make the pattern uniformly bigger."},
-  "Sleep Sack": {title:"Zipper colour fix", tag:"run with ChatGPT Images 2.0 Edit so the zipper matches the print", prompt:"Make the zipper the same colour as the main colour of the print{color}."}
+  "Knot Hat": {title:"Knot hat scale fix", tag:"the micro-print is too small on the tiny hat — run this after the cleanup pass", prompt:"Make the pattern uniformly bigger."}
 };
 
 /* General flatlay cleanup. */
-const BG_CLEANUP = "Replace the background with pure solid white (#FFFFFF). Keep the pattern on the garment only — remove any pattern, motif, colour, or tint from the background so the garment sits on clean, empty white.";
+const CLEANUP_PASS = `Clean up this product flat-lay without changing the garment's design.
+• Background: make it pure solid white (#FFFFFF) and empty — remove any pattern, motif, colour or tint from the background so the print stays ONLY on the garment.
+• Print: keep a refined, evenly distributed micro-print at a consistent scale across the whole garment; do not enlarge, crop, stretch or distort the motifs.
+• Zipper: if the garment has a zipper, recolour the zipper tape to match the main colour of the print{color}.
+• Preserve the exact print, colours, garment shape, fabric texture, seams and proportions. Change nothing else — output a clean e-commerce flat-lay on white.`;
+
+const FOOTIE_SOLE = `Footie sole flat-lay — run separately, using the real footie-sole photo as the image reference.
+Apply the new seamless print to the footie's fabric, but keep the non-slip sole as a Sweet Bamboo sole: a solid sole in the print's main colour{color}, fully covered with evenly spaced small white grippy dots and a white "SB" monogram centred on each sole. Keep the sole dots and the SB monogram sharp and unchanged, keep the garment shape, and put everything on a pure solid white (#FFFFFF) background — print on the garment only.`;
 
 /* Sleep Sack first by default (matches the Figma layout order). */
 ["boys","girls"].forEach(g=>{
@@ -410,12 +405,12 @@ function garmentType(name){
   return "other";
 }
 const VIS = {
-  hat:"The knot hat is always fully visible and is the hero of the frame.",
+  hat:"The knot hat is the hero and fully visible; dress the baby in a plain, solid neutral bodysuit so nothing competes with the hat.",
   sleep:"Show the entire garment; the baby lies so its full length is visible and uncropped.",
   tank:"Upper-body hero — frame head to mid-thigh so the top fills the frame.",
   shorts:"Lower-body hero — frame chest to feet so the shorts are the focus.",
   dress:"Show the entire dress, full length and uncropped.",
-  footie:"Show the entire footie, including the enclosed feet.",
+  footie:"Show the entire footie including the feet; the soles are solid in the garment\u2019s main colour, covered in evenly spaced small white non-slip grippy dots with a small white \u2018SB\u2019 monogram in the centre, clearly visible in the frame.",
   romper:"Show the entire romper, full body.",
   set:"Show the entire set — top and bottoms fully visible.",
   tee:"Upper-body hero — the top is fully visible and fills the frame.",
@@ -427,7 +422,7 @@ const POSE_DEFAULTS = {
   shorts:["walking barefoot, carrying a small woven basket","standing on tiptoes","sitting on the floor, one knee raised","twirling","climbing one step","crossing ankles, standing relaxed","running a few steps","looking down at bare feet","hopping mid-air, knees bent","sitting on the floor, legs stretched out","one foot up on a low wooden block","skipping forward","standing feet apart, hands on hips","crouching low, peeking at the ground","balancing on one leg, arms out","tiptoeing as if sneaking","sitting on a small stool, ankles crossed","mid-stride, arms swinging","kneeling on both knees","stepping over a small object","bouncing on the balls of the feet","walking away, glancing back over the shoulder","sitting on the floor, knees hugged","standing tall, one foot pointed","climbing onto a low cube","barefoot on grass, toes curled"],
   set:["sitting cross-legged, reading a book","kneeling on the bed, hugging a pillow","sitting on the bed, laughing","standing by the window, stretching","walking mid-step","lying with feet toward the camera, relaxed","stretching with a yawn","looking out the window","sitting cross-legged, laughing","lying on tummy, chin on hands, feet up","sitting on the edge of the bed, swinging feet","hugging a plush bunny on the bed","reading a book lying on the tummy","kneeling, arms wrapped around a pillow","sitting up in bed, rubbing one eye","standing, arms raised in a big stretch","peeking out from behind a pillow","sitting cross-legged, stacking small books","lying on the back, knees up, relaxed","walking toward the bed, teddy in hand","sitting on a soft rug, legs to one side","leaning against the headboard, calm","mid-laugh, tossing a soft pillow","curled up on one side, resting","sitting on the floor by the bed, reading","standing on the bed, arms out, giggling","yawning, stretching arms overhead","sitting quietly, hands in lap, soft smile"],
   romper:["walking mid-step","crawling toward the camera","standing, reaching upward","sitting, holding a teddy","standing, looking upward","dancing with arms out","holding a parent's hand","sitting, looking over shoulder","taking wobbly first steps, arms out","sitting on the floor, clapping","reaching for a plush bunny","standing, holding onto a low cube","crouching to pick up a small toy","looking up with a big open-mouth smile","sitting, holding both feet","crawling, pausing to look up","standing, waving","toddling toward a parent's open arms","sitting on a small stool, legs dangling","peekaboo behind small hands","standing, head tilted, curious","holding a wooden block up to look at it","sitting, leaning back on hands","mid-giggle, shoulders scrunched","reaching both arms up to be picked up","standing tall, proud little smile"],
-  footie:["sitting on the floor, holding a small toy","standing, looking upward","crawling toward the camera","sitting, holding one foot, smiling","lying on tummy, head lifted","hugging a sibling","holding a toy, looking up","lying on back, holding both feet","sitting, clapping hands","crawling, pausing mid-motion","sitting propped with a cushion, calm","reaching for a plush bunny","lying on tummy, pushing up on arms","sitting, looking over the shoulder","rolling gently onto one side","sitting, holding a soft toy","standing holding a low rail, beaming","lying back, kicking feet playfully","sitting, reaching toward the camera","tummy time, chin resting on hands","sitting, head tilted, wide eyes","crawling toward a wooden toy","sitting, hands together, gentle smile","lying down, yawning, relaxed","propped sitting, holding a book","sitting, one hand raised, waving"],
+  footie:["lying on the back holding both feet, grippy soles toward the camera","sitting with legs stretched out, soles facing the camera","lying on tummy with feet raised, showing the grippy soles","crawling away from the camera, grippy soles visible","sitting, lifting one foot to show the sole","sitting on the floor, holding a small toy","standing, looking upward","crawling toward the camera","sitting, holding one foot, smiling","lying on tummy, head lifted","hugging a sibling","holding a toy, looking up","lying on back, holding both feet","sitting, clapping hands","crawling, pausing mid-motion","sitting propped with a cushion, calm","reaching for a plush bunny","lying on tummy, pushing up on arms","sitting, looking over the shoulder","rolling gently onto one side","sitting, holding a soft toy","standing holding a low rail, beaming","lying back, kicking feet playfully","sitting, reaching toward the camera","tummy time, chin resting on hands","sitting, head tilted, wide eyes","crawling toward a wooden toy","sitting, hands together, gentle smile","lying down, yawning, relaxed","propped sitting, holding a book","sitting, one hand raised, waving"],
   sleep:["sleeping peacefully in the crib","lying in the crib, holding one foot","cuddled gently against a parent's shoulder","lying in a bassinet, calm","lying in the crib mid-yawn, relaxed","resting in a nursery chair with a parent","overhead nursery shot, sleeping","stretching awake, calm","lying on the back, arms up beside the head, asleep","carried gently in a parent's arms","lying in the crib, looking up at a mobile","curled on one side in the crib, sleeping","lying on a soft nursery rug, calm","yawning, small fists near the face","lying in the crib, a plush bunny beside","cradled in a parent's arms, looking up","lying in the bassinet, one hand near the cheek","overhead on soft bedding, drowsy","lying awake, kicking gently, content","resting on a parent's chest, calm","lying in the crib in soft morning light, sleeping","stretching, toes pointed, waking softly","lying on the back in the crib, gazing upward","calm and still in the crib","lying in the crib, tiny smile, half-asleep","cradled close, a parent's hand resting gently"],
   hat:["close overhead, sleeping peacefully","yawning, lying calmly","stretching, arms up","cuddled by a parent, a gentle kiss on the hat","lying awake, looking up","overhead, hands near cheeks","close overhead, eyes softly closed","lying on back, looking toward the camera","cradled upright against a shoulder, hat in frame","lying in the crib, a small yawn","overhead, tiny fists near the face","held gently, gazing up at a parent","lying on soft bedding, calm, hat centered","stretching with a big yawn","lying on tummy, head lifted, hat visible","close three-quarter, peaceful expression","parent cradling, foreheads gently touching","lying back, one hand raised","overhead on a knit blanket, sleeping","drowsy, half-lidded eyes, calm","lying in the bassinet, looking around","held close in soft window light","overhead, a gentle smile forming","lying on side, knees tucked, hat in view","cradled in arms, a small stretch","close overhead, serene and still"],
   tee:["laughing, hands behind his back","adjusting the collar, looking at camera","looking over his shoulder","reaching upward mid-motion","sitting on a small stack of books","looking out a window","running a few steps","climbing onto a cube","looking upward, easy smile","arms crossed loosely, confident smile","hands in pockets, relaxed stance","leaning against a wall, calm","mid-laugh, head tipped back slightly","sitting on a stool, elbows on knees","giving a small thumbs up","looking off-camera, curious","tucking chin, shy smile","waving at the camera","sitting cross-legged on the floor","one hand shading eyes, looking up","leaning forward, hands on knees","standing off-center, glancing back","holding a wooden toy car, looking up","shrugging with a grin","resting an arm on a low cube","clapping once, mid-laugh","standing tall, hands relaxed, soft smile","peeking around the edge of the frame"],
@@ -461,6 +456,7 @@ const CAMERA_BANKS = {
   other:["50mm lifestyle, full body","35mm floor level, full body","50mm overhead, full body","85mm full body, off-center"]
 };
 
+const PAIRS = { "Sleep Sack":" with the matching knot hat", "Knot Sack":" with the matching knot hat", "Knot Sleep Gown":" with the matching knot hat", "Ruffle Gown Sleep Sack":" with the matching knot hat" };
 function buildLifestyle(r, cfg, camera){
   const scene = cap(SCENES[r.scene] || SCENES.Studio) + (r.location ? "; " + r.location : "") + ".";
   const pat = cfg.pattern || "Sweet Bamboo";
@@ -474,7 +470,7 @@ function buildLifestyle(r, cfg, camera){
 ${scene} Keep it clean, simple and uncluttered — premium and airy, never busy.
 
 CHARACTER
-${r.character}, wearing the ${r.garment}.
+${r.character}, wearing the ${r.garment}${PAIRS[r.garment]||""}.
 
 ACTION
 ${cap(r.action)}. Natural and joyful, never a stiff catalog pose; hands, hair and props must not cover the garment.
@@ -540,24 +536,34 @@ function generate(){
   const cfg = { pattern: val("pattern"), color: val("color"), motif: val("motif") };
   if(!cfg.pattern){ alert("Enter a pattern name first."); return; }
   const out = document.getElementById("output");
-  let html = card("Flatlay prompt", "product images", FLAT_PROMPT, "flat");
+  let html = card("1 · Flatlay prompt", "Model A — applies the pattern to the garments", FLAT_PROMPT, "flat");
+
+  const cleanup = CLEANUP_PASS.replace("{color}", cfg.color ? " ("+cfg.color+")" : "");
+  const cleanN = ROSTERS[gender].length;
+  window._cleanupN = Array(cleanN).fill(cleanup).join("|");
+  html += `<div class="prompt-card"><div class="prompt-head flat">`+
+    `<div><strong>2 · Flatlay cleanup pass</strong><span class="tag">Copy ×${cleanN} → Array node → Text Iterator into a cleanup Nano Banana; wire Model A's output to its image input exactly like the lifestyle model so the 16 pair up</span></div>`+
+    `<button class="btn small secondary" onclick="copyText(window._cleanupN,this)">Copy ×${cleanN}</button>`+
+    `</div><pre>${esc(cleanup)}</pre></div>`;
 
   ROSTERS[gender].forEach(a=>{
     const f = FLATLAY_FIXES[a[0]];
     if(f){
       const p = f.prompt.replace("{color}", cfg.color ? " ("+cfg.color+")" : "");
-      html += card(f.title, f.tag, p, "flat");
+      html += card("3 · "+f.title, f.tag, p, "flat");
     }
   });
-
-  html += card("Background cleanup", "run with ChatGPT Images 2.0 Edit if the print bleeds onto the background", BG_CLEANUP, "flat");
+  html += card("4 · Footie sole", "separate gen — run with the real footie-sole photo as the image reference so the dots + SB stay accurate", FOOTIE_SOLE.replace("{color}", cfg.color ? " ("+cfg.color+")" : ""), "flat");
 
   const seed = (parseInt(localStorage.getItem("sb_runseed")||"0",10))||0;
+  const usedPoses = new Set();
   window._csv = [];
   ROSTERS[gender].forEach((a,i)=>{
     const type = garmentType(a[0]);
     const bank = (POSE_BANKS[type] && POSE_BANKS[type].length) ? POSE_BANKS[type] : POSE_DEFAULTS[type];
-    const pose = bank[(seed+i)%bank.length];
+    let k=(seed+i)%bank.length, pose=bank[k], tries=0;
+    while(usedPoses.has(pose) && tries<bank.length){ k=(k+1)%bank.length; pose=bank[k]; tries++; }
+    usedPoses.add(pose);
     const cam  = CAMERA_BANKS[type][(seed+i)%CAMERA_BANKS[type].length];
     const r = {garment:a[0], details:a[1], character:a[2], scene:a[3], location:a[4], action:pose};
     const p = buildLifestyle(r, cfg, cam);
@@ -580,18 +586,15 @@ function card(title, tag, text, cls){
 }
 
 /* ---------- Copy ---------- */
-function copyOne(id, btn){
-  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
-    const t=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=t,1200);
-  });
+function doCopy(text, btn){
+  const flash=()=>{ if(btn){ const o=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=o,1200); } };
+  const legacy=()=>{ try{ const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.top="-1000px"; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand("copy"); ta.remove(); }catch(e){} flash(); };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(flash).catch(legacy); }
+  else { legacy(); }
 }
-function copyArray(btn){
-  if(!window._csv){ alert("Generate first."); return; }
-  const blob = window._csv.map(r=>r[1]).join("|");
-  navigator.clipboard.writeText(blob).then(()=>{
-    const t=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=t,1200);
-  });
-}
+function copyOne(id, btn){ doCopy(document.getElementById(id).textContent, btn); }
+function copyArray(btn){ if(!window._csv){ alert("Generate first."); return; } doCopy(window._csv.map(r=>r[1]).join("|"), btn); }
+function copyText(t,btn){ if(!t){ alert("Generate first."); return; } doCopy(t, btn); }
 
 /* ---------- helpers ---------- */
 function val(id){ return document.getElementById(id).value.trim(); }
